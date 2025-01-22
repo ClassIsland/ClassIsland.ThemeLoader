@@ -4,9 +4,12 @@
 
 id: classIsland.themeLoader
 name: ClassIsland 主题加载器
-description: 插件描述
+description: 向 ClassIsland 加载自定义的主题，个性化您的界面。
 entranceAssembly: "ClassIsland.ThemeLoader.dll"
-url: https://classisland.tech
+url: https://github.com/ClassIsland/ClassIsland.ThemeLoader/
 version: 0.0.0.0
 apiVersion: 1.5.3
 author: ClassIsland
+repoOwner: ClassIsland
+repoName: ClassIsland.ThemeLoader
+assetsRoot: master/ClassIsland.ThemeLoader
