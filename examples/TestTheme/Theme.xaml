@@ -5,17 +5,61 @@
                     xmlns:ci="http://classisland.tech/schemas/xaml/core"
                     xmlns:system="clr-namespace:System;assembly=mscorlib"
                     xmlns:classIsland="clr-namespace:ClassIsland;assembly=ClassIsland">
+    <ci:SolidColorBrushToColorConverter x:Key="SolidColorBrushToColorConverter"/>
+
+    <Style TargetType="{x:Type Grid}" x:Key="GridComponentPresenterContainerStyle">
+        <Style.Triggers>
+            <Trigger Property="IsVisible" Value="True">
+                <Trigger.EnterActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)">
+                                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="0.00"/>
+                                <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="1">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <SineEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)">
+                                <EasingDoubleKeyFrame KeyTime="00:00:00.0000000" Value="-60"/>
+                                <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <SineEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </Trigger.EnterActions>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
     <Style TargetType="{x:Type ci:ComponentPresenter}" >
         <Style.Triggers>
             <Trigger Property="IsRootComponent" Value="True">
                 <Setter Property="Template" >
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ci:ComponentPresenter}">
-                            <Grid>
-                                <Border CornerRadius="10" Padding="10 0"
-                                        Background="#55000000" 
+                            <Grid Style="{StaticResource GridComponentPresenterContainerStyle}">
+                                <Grid.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform />
+                                        <SkewTransform />
+                                        <RotateTransform />
+                                        <TranslateTransform Y="-60" />
+                                    </TransformGroup>
+                                </Grid.RenderTransform>
+                                <Border CornerRadius="10" Padding="15 0"
+                                            Background="{DynamicResource MaterialDesignBackground}" 
+                                            Height="60"
+                                            Opacity="{Binding ViewModel.Settings.Opacity, RelativeSource={RelativeSource AncestorType=classIsland:MainWindow}}"
+                                            > 
+                                </Border>
+                                <Border CornerRadius="10" Padding="15 0"
                                         Height="60"
-                                        BorderBrush="{DynamicResource PrimaryHueMidBrush}" BorderThickness="1"
+                                        BorderBrush="{DynamicResource PrimaryHueMidBrush}" BorderThickness="0.75"
                                         >
                                     <Grid>
                                         <Grid>
@@ -49,6 +93,14 @@
                                             <ContentPresenter Content="{Binding Content, RelativeSource={RelativeSource AncestorType= ci:ComponentPresenter}}" />
                                         </Grid>
                                     </Grid>   
+                                </Border>
+                                <Border CornerRadius="10" Padding="15 0"
+                                        Height="60"
+                                        BorderBrush="{DynamicResource PrimaryHueMidBrush}" BorderThickness="0.75"
+                                        >
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="8" ShadowDepth="0" Opacity="0.8"  Color="{Binding BorderBrush, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Border}, Converter={StaticResource SolidColorBrushToColorConverter}}"/>
+                                    </Border.Effect>
                                 </Border>
                             </Grid>
                         </ControlTemplate> 
@@ -149,24 +201,27 @@
                                     <ContentPresenter
                                         Content="{Binding Content, RelativeSource={RelativeSource AncestorType=controls:MainWindowLine}}" />
                                 </Grid>
-
+                            
                                 <!-- Overlay View -->
                                 <Grid x:Name="GridOverlay"
                                     SnapsToDevicePixels="True"
-                                    ClipToBounds="True">
-                                    <Border CornerRadius="20"
-                                            ClipToBounds="True">
-
-                                        <ProgressBar VerticalAlignment="Stretch"
+                                    ClipToBounds="True"
+                                    Opacity="0">
+                                    <Border Background="{DynamicResource MaterialDesignBackground}"
+                                            Opacity="{Binding ViewModel.Settings.Opacity, RelativeSource={RelativeSource AncestorType=classIsland:MainWindow}}"/>
+                                    <Border ClipToBounds="True">
+                                        <ProgressBar VerticalAlignment="Bottom"
                                                     Maximum="1"
                                                     Value="{Binding NotificationProgressBarValue, RelativeSource={RelativeSource AncestorType=classIsland:MainWindow}}"
                                                     x:Name="OverlayTimeProgressBar"
                                                     materialDesign:TransitionAssist.DisableTransitions="True"
-                                                    Height="{Binding Height, ElementName=PART_GridWrapper}"
-                                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                                    Height="3"
+                                                    Foreground="{DynamicResource PrimaryHueMidBrush}"
                                                     Background="Transparent"
-                                                    BorderBrush="Transparent"
-                                                    Opacity="0.16">
+                                                    BorderBrush="Transparent">
+                                            <ProgressBar.Effect>
+                                                <DropShadowEffect BlurRadius="12" ShadowDepth="0" Opacity="1"  Color="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ProgressBar}, Converter={StaticResource SolidColorBrushToColorConverter}}"/>
+                                            </ProgressBar.Effect>
                                         </ProgressBar>
                                     </Border>
                                     <ContentPresenter
