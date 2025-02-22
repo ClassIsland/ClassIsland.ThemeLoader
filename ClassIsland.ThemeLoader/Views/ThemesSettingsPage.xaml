@@ -34,56 +34,70 @@
         </Grid>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </ci:SettingsPageBase.Resources>
-    <Grid MaxWidth="750">
+    <Grid MaxWidth="750" Margin="0,6,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid Row="0">
-
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                <Button Style="{StaticResource MaterialDesignFlatButton}"
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <ci:IconText Grid.Column="0" Kind="FileCode" Text="主题" Height="40"/>
+            <materialDesign:ColorZone Grid.Column="1"
+                                      CornerRadius="4"
+                                      Background="{DynamicResource MaterialDesignCardBackground}">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Button Style="{StaticResource MaterialDesignFlatButton}"
                         Click="ButtonLoadThemes_OnClick">
-                    <ci:IconText Kind="Restart" Text="重载主题"/>
-                </Button>
-                <Button Style="{StaticResource MaterialDesignFlatButton}"
+                        <ci:IconText Kind="Restart" Text="重载主题"/>
+                    </Button>
+                    <Button Style="{StaticResource MaterialDesignFlatButton}"
                         Click="ButtonOpenThemeFolder_OnClick">
-                    <ci:IconText Kind="FolderOutline" Text="打开主题文件夹…"/>
-                </Button>
-            </StackPanel>
+                        <ci:IconText Kind="FolderOutline" Text="打开主题文件夹…"/>
+                    </Button>
+                </StackPanel>
+            </materialDesign:ColorZone>
         </Grid>
 
-        <ListBox Grid.Row="1" 
-                 HorizontalContentAlignment="Stretch"
+        <StackPanel Grid.Row="1">
+            <materialDesign:Card Padding="7">
+                <materialDesign:ColorZone CornerRadius="4"
+                                          Padding="4,4,4,-3"
+                                          ClipToBounds="True">
+                    <ListBox HorizontalContentAlignment="Stretch"
+                         Background="{DynamicResource MaterialDesignPaper}"
                  ItemsSource="{Binding XamlThemeService.Themes}" SelectedItem="{Binding SelectedTheme}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Grid>
-                        <Grid.Style>
-                            <Style TargetType="Grid">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsLoaded}"
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Vertical">
+                                    <Grid>
+                                        <Grid.Style>
+                                            <Style TargetType="Grid">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsLoaded}"
                                                  Value="False">
-                                        <Setter Property="Opacity" Value="0.75"></Setter>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Grid.Style>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <ToggleButton Grid.Column="0" IsChecked="{Binding IsEnabled}"
+                                                        <Setter Property="Opacity" Value="0.75"></Setter>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Grid.Style>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <ToggleButton Grid.Column="0" IsChecked="{Binding IsEnabled}"
                                       VerticalAlignment="Center"
                                       Margin="0 0 4 0"/>
-                        <TextBlock Grid.Column="1" Text="{Binding Name}"
+                                        <TextBlock Grid.Column="1" Text="{Binding Name}"
                                    VerticalAlignment="Center"/>
-                        <StackPanel Grid.Column="2" Orientation="Horizontal"
+                                        <StackPanel Grid.Column="2" Orientation="Horizontal"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
                                     Margin="0 -8">
-                            <Button Style="{StaticResource MaterialDesignToolForegroundButton}"
+                                            <Button Style="{StaticResource MaterialDesignToolForegroundButton}"
                                     Content="{materialDesign:PackIcon Error}"
                                     Visibility="{Binding IsError, Converter={StaticResource BooleanToVisibilityConverter}}"
                                     Margin="2 0"
@@ -91,16 +105,21 @@
                                     ToolTip="加载此主题时发生错误"
                                     CommandParameter="{Binding}"
                                     Command="{Binding ShowErrorsCommand, RelativeSource={RelativeSource AncestorType=local:ThemesSettingsPage}}"/>
-                            <Button Style="{StaticResource MaterialDesignToolForegroundButton}"
+                                            <Button Style="{StaticResource MaterialDesignToolForegroundButton}"
                                     Content="{materialDesign:PackIcon FolderOutline}"
                                     Margin="2 0"
                                     ToolTip="打开主题文件夹…"
                                     CommandParameter="{Binding}"
                                     Command="{Binding OpenFolderCommand, RelativeSource={RelativeSource AncestorType=local:ThemesSettingsPage}}"/>
-                        </StackPanel>
-                    </Grid>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Separator Margin="0,8,0,-6" Background="{DynamicResource MaterialDesignDivider}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </materialDesign:ColorZone>
+            </materialDesign:Card>
+        </StackPanel>
     </Grid>
 </ci:SettingsPageBase>
